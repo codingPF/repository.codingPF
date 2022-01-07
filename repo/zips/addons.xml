@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addons><addon id="plugin.audio.audiothekBrowser" name="codingPF.github.io" version="1.2.0" provider-name="codingPF">
+<addons><addon id="repository.codingPF" name="codingPF.github.io" version="1.0.0" provider-name="codingPF">
     <extension point="xbmc.addon.repository" name="Example Repository">
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/repo/zips/addons.xml</info>
