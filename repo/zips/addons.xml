@@ -1,24 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addons><addon id="repository.codingPF" name="codingPF.github.io" version="1.0.0" provider-name="codingPF">
+<addons><addon id="repository.codingPF" name="repository.codingPF" version="1.0.0" provider-name="codingPF">
     <extension point="xbmc.addon.repository" name="Example Repository">
         <dir>
-            <info compressed="false">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/repo/zips/addons.xml</info>
-            <checksum>https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/repo/zips/addons.xml.md5</checksum>
-            <datadir zip="true">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/repo/zips/</datadir>
+            <info compressed="false">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/repo/zips/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/repo/zips/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/repo/zips/</datadir>
         </dir>
 		<dir minversion="18.0.0" maxversion="18.9.9">
-		    <info compressed="false">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/leia/zips/addons.xml</info>
-		    <checksum>https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/leia/zips/addons.xml.md5</checksum>
-		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/leia/zips/</datadir>
+		    <info compressed="false">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/leia/zips/addons.xml</info>
+		    <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/leia/zips/addons.xml.md5</checksum>
+		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/leia/zips/</datadir>
 		</dir>
 		<dir minversion="19.0.0">
-		    <info compressed="false">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/matrix/zips/addons.xml</info>
-		    <checksum>https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/matrix/zips/addons.xml.md5</checksum>
-		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/codingPF.github.io/main/matrix/zips/</datadir>
+		    <info compressed="false">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/matrix/zips/addons.xml</info>
+		    <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/matrix/zips/addons.xml.md5</checksum>
+		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/matrix/zips/</datadir>
 		</dir>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>codingPF.github.io</summary>
+        <summary>repository.codingPF</summary>
         <description>My Kodi Plugins</description>
         <disclaimer />
         <platform>all</platform>
