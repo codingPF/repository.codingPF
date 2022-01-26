@@ -37,6 +37,19 @@ class KodiUI(object):
         self.tzBase = datetime.datetime.fromtimestamp(0)
 
 
+    def addDirectoryItem(self, pTitle, pUrl, pSortTitle = None, pIcon = None, pContextMenu = None):
+        self.addListItem(
+            pTitle=pTitle, 
+            pUrl=pUrl, 
+            pSortTitle=None, 
+            pPlot=None, 
+            pDuration= None, 
+            pAired= None, 
+            pIcon=pIcon, 
+            pContextMenu=pContextMenu,
+            pPlayable='False',
+            pFolder=True)
+
     def addListItem(self, pTitle, pUrl, pSortTitle = None, pPlot = None, pDuration = None, pAired = None, pIcon = None, pContextMenu = None, pPlayable = 'True', pFolder = False):
         #
         if self.startTime == 0:
@@ -59,8 +72,11 @@ class KodiUI(object):
                 info_labels['duration'] = '{:02d}:{:02d}:00'.format(*divmod(pDuration, 60))
             #
             if pAired:
-                ndate = self.tzBase + datetime.timedelta(seconds=(pAired))
-                airedstring = ndate.isoformat().replace('T', ' ')
+                if type(pAired) in (str, unicode):
+                    ndate = pAired
+                else:
+                    ndate = (self.tzBase + datetime.timedelta(seconds=(pAired))).isoformat()
+                airedstring = ndate.replace('T', ' ')
                 info_labels['date'] = airedstring[:10]
                 info_labels['aired'] = airedstring[:10]
                 info_labels['dateadded'] = airedstring
