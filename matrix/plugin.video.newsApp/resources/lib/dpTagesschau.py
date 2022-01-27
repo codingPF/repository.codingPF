@@ -51,6 +51,8 @@ class DpTagesschau(object):
             if channel.get('date') is not None:
                 if len(channel.get('date')) > 0:
                     dataModel.aired = channel.get('date')[0:19].replace('T', ' ')
+            else:
+                dataModel.aired = '1970-01-01 00:00:00'
             #
             if channel.get('teaserImage') is not None:
                 if channel.get('teaserImage').get('videowebl') is not None:
@@ -135,7 +137,7 @@ class DpTagesschau(object):
                 showImage[entry.get('broadcastTitle')]=img
                 self.logger.debug('add image for {} {}',entry.get('broadcastTitle'),img)             
         # merge the data from image to index because the index contains old shows
-        for k,v in showImage.items():
+        for k,v in list(showImage.items()):
             dataModel = EpisodeModel.EpisodeModel()
             dataModel.channel = 'ARD'
             dataModel.id = k
