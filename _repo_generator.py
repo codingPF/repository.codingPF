@@ -10,6 +10,8 @@ import shutil
 import sys
 import zipfile
 
+import fnmatch
+
 from xml.etree import ElementTree
 
 SCRIPT_VERSION = 4
@@ -35,7 +37,7 @@ _COLORS = {
     "grey": "37",
     "endc": "0",
 }
-
+_GIT_ROOT = 'C:/Users/steph/git/' 
 
 def _setup_colors():
     """
@@ -148,7 +150,7 @@ class Generator:
             os.makedirs(self.zips_path)
 
         self._remove_binaries()
-
+        
         if self._generate_addons_file(addons_xml_path):
             print(
                 "Successfully updated {}".format(color_text(addons_xml_path, 'yellow'))
@@ -272,6 +274,27 @@ class Generator:
 
             shutil.copy(addon_path, zips_path)
 
+    def _updateFromSourceProject(self, pathArray):
+        for path in pathArray:
+            if path == 'repository.codingPF':
+                return
+            src = _GIT_ROOT + path
+            dst = self.release_path + '/' + path
+            #print('try ' + src + ' ' + dst )
+            if os.path.exists(src):
+                shutil.rmtree(dst+'/resources')
+                shutil.copytree(
+                    src+'/resources', 
+                    dst+'/resources')
+                shutil.copy2(src+'/addon.py', dst+'/addon.py')
+                if self.release_path == 'leia':
+                    shutil.copy2(src+'/addon18.xml', dst+'/addon.xml')
+                else:
+                    shutil.copy2(src+'/addon19.xml', dst+'/addon.xml')
+                shutil.copy2(src+'/LICENSE', dst+'/LICENSE')
+                shutil.copy2(src+'/README.md', dst+'/README.md')
+
+
     def _generate_addons_file(self, addons_xml_path):
         """
         Generates a zip for each found addon, and updates the addons.xml file accordingly.
@@ -291,6 +314,8 @@ class Generator:
             and not i.startswith(".")
             and os.path.exists(os.path.join(self.release_path, i, "addon.xml"))
         ]
+
+        self._updateFromSourceProject(folders)
 
         addon_xpath = "addon[@id='{}']"
         changed = False
