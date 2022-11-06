@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addons><addon id="plugin.audio.audiothekBrowser" name="Audiothek Browser" version="1.2.3" provider-name="CodingPF">
+<addons><addon id="plugin.audio.audiothekBrowser" name="Audiothek Browser" version="1.2.4" provider-name="CodingPF">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
     </requires>
@@ -12,6 +12,10 @@
         <description lang="de_DE">Ein Kodi Plugin um die ARD Audiothek in Kodi zu durchsuchen</description>
         <description lang="en_GB">Browse the ARD Audiothek using Kodi</description>
         <news>
+v.1.2.4
+[fix] icon issue for organization
+[feature] add elements gt 0 filter on request
+[fix] sort order for folders 
 v.1.2.3
 fix NPT
 v.1.2.2
@@ -30,7 +34,7 @@ fix playItem function
             <screenshot>resources/screenshot3.png</screenshot>
         </assets>
     </extension>
-</addon><addon id="plugin.video.newsApp" name="News App" version="1.0.5" provider-name="codingPF">
+</addon><addon id="plugin.video.newsApp" name="News App" version="1.0.6" provider-name="codingPF">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
     </requires>
@@ -43,6 +47,8 @@ fix playItem function
         <description lang="de_DE">News aus der Tagesschau App und ZDF Heute App</description>
         <description lang="en_GB">News from Tagessschau App and ZDF Heute App</description>
         <news>
+v1.0.6
+- live stream replay issue
 v1.0.5 
 - update to https for dpTagesschau
 v1.0.4 
@@ -54,7 +60,7 @@ v1.0.2
 v1.0.1 
 - fix for Kodi19 binary download issue
 		</news>
-        <platform>all</platform>
+		<platform>all</platform>
         <language>de en</language>
         <license>MIT</license>
         <source>https://github.com/codingPF/plugin.video.newsApp</source>
