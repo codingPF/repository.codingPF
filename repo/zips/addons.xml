@@ -6,17 +6,17 @@
             <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/repo/zips/addons.xml.md5</checksum>
             <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/repo/zips/</datadir>
         </dir>
-		<dir minversion="18.0.0" maxversion="18.9.9">
+		<dir minversion="17.9.910" maxversion="18.9.700">
 		    <info compressed="false">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/leia/zips/addons.xml</info>
 		    <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/leia/zips/addons.xml.md5</checksum>
 		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/leia/zips/</datadir>
 		</dir>
-		<dir minversion="18.9.901" maxversion="19.9.9">
+		<dir minversion="18.9.701" maxversion="19.9.700">
 		    <info compressed="false">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/matrix/zips/addons.xml</info>
 		    <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/matrix/zips/addons.xml.md5</checksum>
 		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/matrix/zips/</datadir>
 		</dir>
-		<dir minversion="19.9.901">
+		<dir minversion="19.9.701" maxversion="20.9.700">
 		    <info compressed="false">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/nexus/zips/addons.xml</info>
 		    <checksum>https://raw.githubusercontent.com/codingPF/repository.codingPF/main/nexus/zips/addons.xml.md5</checksum>
 		    <datadir zip="true">https://raw.githubusercontent.com/codingPF/repository.codingPF/main/nexus/zips/</datadir>
