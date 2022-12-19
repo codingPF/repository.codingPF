@@ -37,7 +37,9 @@ _COLORS = {
     "grey": "37",
     "endc": "0",
 }
-_GIT_ROOT = 'C:/Users/steph/git/' 
+_GIT_ROOT = 'C:/Users/steph/git/'
+
+_DO_UPDATE_FROM_SOURCE_PRJECT = False
 
 def _setup_colors():
     """
@@ -315,7 +317,8 @@ class Generator:
             and os.path.exists(os.path.join(self.release_path, i, "addon.xml"))
         ]
 
-        self._updateFromSourceProject(folders)
+        if _DO_UPDATE_FROM_SOURCE_PRJECT:
+            self._updateFromSourceProject(folders)
 
         addon_xpath = "addon[@id='{}']"
         changed = False
