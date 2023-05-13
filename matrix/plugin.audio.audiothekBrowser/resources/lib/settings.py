@@ -5,12 +5,12 @@ SPDX-License-Identifier: MIT
 """
 
 # -- Imports ------------------------------------------------
+import resources.lib.utils as pyUtiles
 import xbmc
 import xbmcvfs
-import resources.lib.utils as pyUtiles
+
+
 # -- Classes ------------------------------------------------
-
-
 class Settings(object):
     """ The settings class """
 
@@ -36,23 +36,8 @@ class Settings(object):
         return int(xbmc_version.split('-')[0].split('.')[0])
 
     # General
-    def getIconSize(self):
-        return self._addonClass.getSetting('iconSize')
+    def isUseZdf(self):
+        return self._addonClass.getSetting('useZDF') == 'true'
 
-    def getIconRatio(self):
-        return self._addonClass.getSetting('iconRatio')
-
-    def getLastUpdateIndex(self):
-        try:
-            return int(self._addonClass.getSetting('lastUpdateIndex'))
-        except Exception:
-            return 0
-
-    def setLastUpdateIndex(self, pValue):
-        self._addonClass.setSetting('lastUpdateIndex', pValue)
-
-    def getUpdateInterval(self):
-        return int(self._addonClass.getSetting('updateInterval'))
-
-    def getDownloadPath(self):
-        return self._addonClass.getSetting('downloadPath')
+    def isUseArd(self):
+        return self._addonClass.getSetting('useARD') == 'true'

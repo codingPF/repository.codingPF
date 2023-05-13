@@ -16,63 +16,27 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Main Menu
+# Settings
+msgctxt "#30000"
+msgid "settings"
+msgstr "Settings"
+
 msgctxt "#30001"
-msgid "Organization"
-msgstr "Organization"
+msgid "useARD"
+msgstr "Show ARD"
 
 msgctxt "#30002"
-msgid "Channel"
-msgstr "Channel"
-
-msgctxt "#30003"
-msgid "Broadcast"
-msgstr "Category"
-
-msgctxt "#30004"
-msgid "Episode"
-msgstr "Episode"
-
-msgctxt "#30005"
-msgid "Livestream"
-msgstr "Livestream"
-
-msgctxt "#30006"
-msgid "Update"
-msgstr "Update"
-
-msgctxt "#30007"
-msgid "Download Folder"
-msgstr "Download Folder"
-
-msgctxt "#30008"
-msgid "LastUpdateIndex"
-msgstr "Last Update Index"
-
-msgctxt "#30009"
-msgid "UpdateInterval"
-msgstr "Update Interval"
-
-msgctxt "#30010"
-msgid "Tags"
-msgstr "Tags"
-
-msgctxt "#30011"
-msgid "Search"
-msgstr "Search"
-
-msgctxt "#30100"
-msgid "Download"
-msgstr "Download"
+msgid "useZDF"
+msgstr "Show ZDF"
 
 msgctxt "#30101"
 msgid "Airdate: {0:s}[CR][CR]"
 msgstr "Airdate: {0:s}[CR][CR]"
 
 msgctxt "#30102"
-msgid "Downloading"
-msgstr "Downloading"
+msgid "Updateing"
+msgstr "Updateing"
 
-msgctxt "#30900"
-msgid "General"
-msgstr "General"
+msgctxt "#30103"
+msgid "Downlaoding"
+msgstr "Downlaoding"
