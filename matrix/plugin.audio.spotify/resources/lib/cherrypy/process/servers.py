@@ -132,6 +132,7 @@ class Timeouts:
 
 
 class ServerAdapter(object):
+
     """Adapter for an HTTP server.
 
     If you need to start more than one HTTP server (to serve on multiple
@@ -183,7 +184,6 @@ class ServerAdapter(object):
         self.wait()
         self.running = True
         self.bus.log('Serving on %s' % self.description)
-
     start.priority = 75
 
     @property
@@ -283,7 +283,6 @@ class ServerAdapter(object):
             self.bus.log('HTTP Server %s shut down' % self.httpserver)
         else:
             self.bus.log('HTTP Server %s already shut down' % self.httpserver)
-
     stop.priority = 25
 
     def restart(self):
@@ -293,6 +292,7 @@ class ServerAdapter(object):
 
 
 class FlupCGIServer(object):
+
     """Adapter for a flup.server.cgi.WSGIServer."""
 
     def __init__(self, *args, **kwargs):
@@ -316,6 +316,7 @@ class FlupCGIServer(object):
 
 
 class FlupFCGIServer(object):
+
     """Adapter for a flup.server.fcgi.WSGIServer."""
 
     def __init__(self, *args, **kwargs):
@@ -323,9 +324,9 @@ class FlupFCGIServer(object):
             import socket
             if not hasattr(socket, 'fromfd'):
                 raise ValueError(
-                        'Dynamic FCGI server not available on this platform. '
-                        'You must use a static or external one by providing a '
-                        'legal bindAddress.')
+                    'Dynamic FCGI server not available on this platform. '
+                    'You must use a static or external one by providing a '
+                    'legal bindAddress.')
         self.args = args
         self.kwargs = kwargs
         self.ready = False
@@ -356,11 +357,12 @@ class FlupFCGIServer(object):
         self.fcgiserver._keepGoing = False
         # Force all worker threads to die off.
         self.fcgiserver._threadPool.maxSpare = (
-                self.fcgiserver._threadPool._idleCount)
+            self.fcgiserver._threadPool._idleCount)
         self.ready = False
 
 
 class FlupSCGIServer(object):
+
     """Adapter for a flup.server.scgi.WSGIServer."""
 
     def __init__(self, *args, **kwargs):

@@ -33,6 +33,7 @@ response_codes[503] = ('Service Unavailable',
                        'request due to a temporary overloading or '
                        'maintenance of the server.')
 
+
 HTTPDate = functools.partial(email.utils.formatdate, usegmt=True)
 
 
@@ -126,6 +127,7 @@ def get_ranges(headervalue, content_length):
 
 
 class HeaderElement(object):
+
     """An element (with parameters) from an HTTP header's element list."""
 
     def __init__(self, value, params=None):
@@ -141,7 +143,7 @@ class HeaderElement(object):
         return self.value < other.value
 
     def __str__(self):
-        p = [';%s=%s' % (k, v) for k, v in list(self.params.items())]
+        p = [';%s=%s' % (k, v) for k, v in self.params.items()]
         return str('%s%s' % (self.value, ''.join(p)))
 
     def __bytes__(self):
@@ -167,6 +169,7 @@ q_separator = re.compile(r'; *q *=')
 
 
 class AcceptElement(HeaderElement):
+
     """An element (with parameters) from an Accept* header's element list.
 
     AcceptElement objects are comparable; the more-preferred object will be
@@ -207,9 +210,9 @@ class AcceptElement(HeaderElement):
             Ref: https://github.com/cherrypy/cherrypy/issues/1370
             """
             raise cherrypy.HTTPError(
-                    400,
-                    'Malformed HTTP header: `{}`'.
-                    format(str(self)),
+                400,
+                'Malformed HTTP header: `{}`'.
+                format(str(self)),
             ) from val_err
 
     def __cmp__(self, other):
@@ -385,6 +388,7 @@ def parse_query_string(query_string, keep_blank_values=True, encoding='utf-8'):
 
 
 class CaseInsensitiveDict(jaraco.collections.KeyTransformingDict):
+
     """A case-insensitive dict subclass.
 
     Each key is changed on entry to title case.
@@ -406,13 +410,14 @@ class CaseInsensitiveDict(jaraco.collections.KeyTransformingDict):
 if str == bytes:
     header_translate_table = ''.join([chr(i) for i in range(256)])
     header_translate_deletechars = ''.join(
-            [chr(i) for i in range(32)]) + chr(127)
+        [chr(i) for i in range(32)]) + chr(127)
 else:
     header_translate_table = None
-    header_translate_deletechars = bytes(list(range(32))) + bytes([127])
+    header_translate_deletechars = bytes(range(32)) + bytes([127])
 
 
 class HeaderMap(CaseInsensitiveDict):
+
     """A dict subclass for HTTP request and response headers.
 
     Each key is changed on entry to str(key).title(). This allows headers
@@ -441,7 +446,7 @@ class HeaderMap(CaseInsensitiveDict):
 
     def output(self):
         """Transform self into a list of (name, value) tuples."""
-        return list(self.encode_header_items(list(self.items())))
+        return list(self.encode_header_items(self.items()))
 
     @classmethod
     def encode_header_items(cls, header_items):
@@ -463,7 +468,7 @@ class HeaderMap(CaseInsensitiveDict):
         # See header_translate_* constants above.
         # Replace only if you really know what you're doing.
         return item.translate(
-                header_translate_table, header_translate_deletechars)
+            header_translate_table, header_translate_deletechars)
 
     @classmethod
     def encode(cls, v):
@@ -489,6 +494,7 @@ class HeaderMap(CaseInsensitiveDict):
 
 
 class Host(object):
+
     """An internet address.
 
     name

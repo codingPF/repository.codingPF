@@ -25,33 +25,33 @@ import operator
 from random import randrange, sample, choice
 
 __all__ = [
-        'all_equal',
-        'consume',
-        'dotproduct',
-        'first_true',
-        'flatten',
-        'grouper',
-        'iter_except',
-        'ncycles',
-        'nth',
-        'nth_combination',
-        'padnone',
-        'pairwise',
-        'partition',
-        'powerset',
-        'prepend',
-        'quantify',
-        'random_combination_with_replacement',
-        'random_combination',
-        'random_permutation',
-        'random_product',
-        'repeatfunc',
-        'roundrobin',
-        'tabulate',
-        'tail',
-        'take',
-        'unique_everseen',
-        'unique_justseen',
+    'all_equal',
+    'consume',
+    'dotproduct',
+    'first_true',
+    'flatten',
+    'grouper',
+    'iter_except',
+    'ncycles',
+    'nth',
+    'nth_combination',
+    'padnone',
+    'pairwise',
+    'partition',
+    'powerset',
+    'prepend',
+    'quantify',
+    'random_combination_with_replacement',
+    'random_combination',
+    'random_permutation',
+    'random_product',
+    'repeatfunc',
+    'roundrobin',
+    'tabulate',
+    'tail',
+    'take',
+    'unique_everseen',
+    'unique_justseen',
 ]
 
 
@@ -86,7 +86,7 @@ def tabulate(function, start=0):
         [9, 4, 1, 0]
 
     """
-    return list(map(function, count(start)))
+    return map(function, count(start))
 
 
 def tail(n, iterable):
@@ -211,7 +211,7 @@ def dotproduct(vec1, vec2):
     return sum(map(operator.mul, vec1, vec2))
 
 
-def flatten(list_of_lists):
+def flatten(listOfLists):
     """Return an iterator flattening one level of nesting in a list of lists.
 
         >>> list(flatten([[0, 1], [2, 3]]))
@@ -220,7 +220,7 @@ def flatten(list_of_lists):
     See also :func:`collapse`, which can flatten multiple levels of nesting.
 
     """
-    return chain.from_iterable(list_of_lists)
+    return chain.from_iterable(listOfLists)
 
 
 def repeatfunc(func, times=None, *args):
@@ -259,7 +259,7 @@ def pairwise(iterable):
     """
     a, b = tee(iterable)
     next(b, None)
-    return list(zip(a, b))
+    return zip(a, b)
 
 
 def grouper(iterable, n, fillvalue=None):
@@ -271,7 +271,7 @@ def grouper(iterable, n, fillvalue=None):
     """
     if isinstance(iterable, int):
         warnings.warn(
-                "grouper expects iterable as first parameter", DeprecationWarning
+            "grouper expects iterable as first parameter", DeprecationWarning
         )
         n, iterable = iterable, n
     args = [iter(iterable)] * n
@@ -294,8 +294,8 @@ def roundrobin(*iterables):
     nexts = cycle(iter(it).__next__ for it in iterables)
     while pending:
         try:
-            for nxt in nexts:
-                yield nxt()
+            for next in nexts:
+                yield next()
         except StopIteration:
             pending -= 1
             nexts = cycle(islice(nexts, pending))
@@ -327,8 +327,8 @@ def partition(pred, iterable):
     evaluations = ((pred(x), x) for x in iterable)
     t1, t2 = tee(evaluations)
     return (
-            (x for (cond, x) in t1 if not cond),
-            (x for (cond, x) in t2 if cond),
+        (x for (cond, x) in t1 if not cond),
+        (x for (cond, x) in t2 if cond),
     )
 
 
@@ -387,7 +387,7 @@ def unique_everseen(iterable, key=None):
     seenlist = []
     seenlist_add = seenlist.append
     iterable, keys = tee(iterable)
-    for element, k in zip(iterable, list(map(key, keys)) if key else keys):
+    for element, k in zip(iterable, map(key, keys) if key else keys):
         try:
             if k not in seenset:
                 seenset_add(k)
@@ -407,7 +407,7 @@ def unique_justseen(iterable, key=None):
         ['A', 'B', 'C', 'A', 'D']
 
     """
-    return list(map(next, list(map(operator.itemgetter(1), groupby(iterable, key)))))
+    return map(next, map(operator.itemgetter(1), groupby(iterable, key)))
 
 
 def iter_except(func, exception, first=None):
@@ -448,7 +448,7 @@ def first_true(iterable, default=None, pred=None):
         'missing'
 
     """
-    return next(list(filter(pred, iterable), default))
+    return next(filter(pred, iterable), default)
 
 
 def random_product(*args, repeat=1):
@@ -501,7 +501,7 @@ def random_combination(iterable, r):
     """
     pool = tuple(iterable)
     n = len(pool)
-    indices = sorted(sample(list(range(n)), r))
+    indices = sorted(sample(range(n), r))
     return tuple(pool[i] for i in indices)
 
 

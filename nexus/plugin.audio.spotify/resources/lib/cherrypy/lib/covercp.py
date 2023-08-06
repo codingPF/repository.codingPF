@@ -29,14 +29,13 @@ import urllib.parse
 
 import cherrypy
 
+
 localFile = os.path.join(os.path.dirname(__file__), 'coverage.cache')
 
 the_coverage = None
 try:
     from coverage import coverage
-
     the_coverage = coverage(data_file=localFile)
-
 
     def start():
         the_coverage.start()
@@ -46,11 +45,9 @@ except ImportError:
     the_coverage = None
 
     import warnings
-
     warnings.warn(
-            'No code coverage will be performed; '
-            'coverage.py could not be imported.')
-
+        'No code coverage will be performed; '
+        'coverage.py could not be imported.')
 
     def start():
         pass
@@ -188,7 +185,7 @@ TEMPLATE_LOC_EXCLUDED = """<tr class="excluded">
 </tr>\n"""
 
 TEMPLATE_ITEM = (
-        "%s%s<a class='file' href='report?name=%s' target='main'>%s</a>\n"
+    "%s%s<a class='file' href='report?name=%s' target='main'>%s</a>\n"
 )
 
 
@@ -202,8 +199,9 @@ def _percent(statements, missing):
 
 def _show_branch(root, base, path, pct=0, showpct=False, exclude='',
                  coverage=the_coverage):
+
     # Show the directory name and any of our children
-    dirs = [k for k, v in list(root.items()) if v]
+    dirs = [k for k, v in root.items() if v]
     dirs.sort()
     for name in dirs:
         newpath = os.path.join(path, name)
@@ -212,21 +210,21 @@ def _show_branch(root, base, path, pct=0, showpct=False, exclude='',
             relpath = newpath[len(base):]
             yield '| ' * relpath.count(os.sep)
             yield (
-                    "<a class='directory' "
-                    "href='menu?base=%s&exclude=%s'>%s</a>\n" %
-                    (newpath, urllib.parse.quote_plus(exclude), name)
+                "<a class='directory' "
+                "href='menu?base=%s&exclude=%s'>%s</a>\n" %
+                (newpath, urllib.parse.quote_plus(exclude), name)
             )
 
         for chunk in _show_branch(
-                root[name], base, newpath, pct, showpct,
-                exclude, coverage=coverage
+            root[name], base, newpath, pct, showpct,
+            exclude, coverage=coverage
         ):
             yield chunk
 
     # Now list the files
     if path.lower().startswith(base):
         relpath = path[len(base):]
-        files = [k for k, v in list(root.items()) if not v]
+        files = [k for k, v in root.items() if not v]
         files.sort()
         for name in files:
             newpath = os.path.join(path, name)
@@ -360,7 +358,7 @@ class CoverStats(object):
     @cherrypy.expose
     def report(self, name):
         filename, statements, excluded, missing, _ = self.coverage.analysis2(
-                name)
+            name)
         pc = _percent(statements, missing)
         yield TEMPLATE_COVERAGE % dict(name=os.path.basename(name),
                                        fullpath=name,

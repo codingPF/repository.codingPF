@@ -43,6 +43,9 @@ class UTF8StreamEncoder:
     def __iter__(self):
         return self
 
+    def next(self):
+        return self.__next__()
+
     def __next__(self):
         res = next(self._iterator)
         if isinstance(res, str):
@@ -60,6 +63,7 @@ class UTF8StreamEncoder:
 
 
 class ResponseEncoder:
+
     default_encoding = 'utf-8'
     failmsg = 'Response body could not be encoded with %r.'
     encoding = None
@@ -69,7 +73,7 @@ class ResponseEncoder:
     debug = False
 
     def __init__(self, **kwargs):
-        for k, v in list(kwargs.items()):
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
         self.attempted_charsets = set()
@@ -96,7 +100,6 @@ class ResponseEncoder:
                 if isinstance(chunk, str):
                     chunk = chunk.encode(encoding, self.errors)
                 yield chunk
-
         self.body = encoder(self.body)
         return True
 
@@ -220,15 +223,15 @@ class ResponseEncoder:
         ct = response.headers.elements('Content-Type')
         if self.debug:
             cherrypy.log('Content-Type: %r' % [str(h)
-                                               for h in ct], 'TOOLS.ENCODE')
+                         for h in ct], 'TOOLS.ENCODE')
         if ct and self.add_charset:
             ct = ct[0]
             if self.text_only:
                 if ct.value.lower().startswith('text/'):
                     if self.debug:
                         cherrypy.log(
-                                'Content-Type %s starts with "text/"' % ct,
-                                'TOOLS.ENCODE')
+                            'Content-Type %s starts with "text/"' % ct,
+                            'TOOLS.ENCODE')
                     do_find = True
                 else:
                     if self.debug:
@@ -283,13 +286,13 @@ def compress(body, compress_level):
     import zlib
 
     # See http://www.gzip.org/zlib/rfc-gzip.html
-    yield b'\x1f\x8b'  # ID1 and ID2: gzip marker
-    yield b'\x08'  # CM: compression method
-    yield b'\x00'  # FLG: none set
+    yield b'\x1f\x8b'       # ID1 and ID2: gzip marker
+    yield b'\x08'           # CM: compression method
+    yield b'\x00'           # FLG: none set
     # MTIME: 4 bytes
     yield struct.pack('<L', int(time.time()) & int('FFFFFFFF', 16))
-    yield b'\x02'  # XFL: max compression, slowest algo
-    yield b'\xff'  # OS: unknown
+    yield b'\x02'           # XFL: max compression, slowest algo
+    yield b'\xff'           # OS: unknown
 
     crc = zlib.crc32(b'')
     size = 0

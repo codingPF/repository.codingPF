@@ -6,8 +6,8 @@
 """
 
 from __future__ import absolute_import, division, print_function
-
 __metaclass__ = type
+
 
 import collections
 import threading
@@ -18,6 +18,7 @@ import warnings
 from six.moves import queue
 
 from jaraco.functools import pass_none
+
 
 __all__ = ('WorkerThread', 'ThreadPool')
 
@@ -73,32 +74,32 @@ class WorkerThread(threading.Thread):
         self.start_time = None
         self.work_time = 0
         self.stats = {
-                'Requests': lambda s: self.requests_seen + (
-                        self.start_time is None
-                        and trueyzero
-                        or self.conn.requests_seen
-                ),
-                'Bytes Read': lambda s: self.bytes_read + (
-                        self.start_time is None
-                        and trueyzero
-                        or self.conn.rfile.bytes_read
-                ),
-                'Bytes Written': lambda s: self.bytes_written + (
-                        self.start_time is None
-                        and trueyzero
-                        or self.conn.wfile.bytes_written
-                ),
-                'Work Time': lambda s: self.work_time + (
-                        self.start_time is None
-                        and trueyzero
-                        or time.time() - self.start_time
-                ),
-                'Read Throughput': lambda s: s['Bytes Read'](s) / (
-                        s['Work Time'](s) or 1e-6
-                ),
-                'Write Throughput': lambda s: s['Bytes Written'](s) / (
-                        s['Work Time'](s) or 1e-6
-                ),
+            'Requests': lambda s: self.requests_seen + (
+                self.start_time is None
+                and trueyzero
+                or self.conn.requests_seen
+            ),
+            'Bytes Read': lambda s: self.bytes_read + (
+                self.start_time is None
+                and trueyzero
+                or self.conn.rfile.bytes_read
+            ),
+            'Bytes Written': lambda s: self.bytes_written + (
+                self.start_time is None
+                and trueyzero
+                or self.conn.wfile.bytes_written
+            ),
+            'Work Time': lambda s: self.work_time + (
+                self.start_time is None
+                and trueyzero
+                or time.time() - self.start_time
+            ),
+            'Read Throughput': lambda s: s['Bytes Read'](s) / (
+                s['Work Time'](s) or 1e-6
+            ),
+            'Write Throughput': lambda s: s['Bytes Written'](s) / (
+                s['Work Time'](s) or 1e-6
+            ),
         }
         threading.Thread.__init__(self)
 
@@ -107,7 +108,7 @@ class WorkerThread(threading.Thread):
 
         Retrieves incoming connections from thread pool.
         """
-        self.server.stats['Worker Threads'][self.getName()] = self.stats
+        self.server.stats['Worker Threads'][self.name] = self.stats
         try:
             self.ready = True
             while True:
@@ -172,12 +173,12 @@ class ThreadPool:
 
     def start(self):
         """Start the pool of threads."""
-        for i in range(self.min):
+        for _ in range(self.min):
             self._threads.append(WorkerThread(self.server))
         for worker in self._threads:
-            worker.setName(
-                    'CP Server {worker_name!s}'.
-                    format(worker_name=worker.getName()),
+            worker.name = (
+                'CP Server {worker_name!s}'.
+                format(worker_name=worker.name),
             )
             worker.start()
         for worker in self._threads:
@@ -186,7 +187,7 @@ class ThreadPool:
 
     @property
     def idle(self):  # noqa: D401; irrelevant for properties
-        """Number of worker threads which are idle. Read-only."""
+        """Number of worker threads which are idle. Read-only."""  # noqa: D401
         idles = len([t for t in self._threads if t.conn is None])
         return max(idles - len(self._pending_shutdowns), 0)
 
@@ -225,9 +226,9 @@ class ThreadPool:
 
     def _spawn_worker(self):
         worker = WorkerThread(self.server)
-        worker.setName(
-                'CP Server {worker_name!s}'.
-                format(worker_name=worker.getName()),
+        worker.name = (
+            'CP Server {worker_name!s}'.
+            format(worker_name=worker.name),
         )
         worker.start()
         return worker
@@ -250,7 +251,7 @@ class ThreadPool:
         # put shutdown requests on the queue equal to the number of threads
         # to remove. As each request is processed by a worker, that worker
         # will terminate and be culled from the list.
-        for n in range(n_to_remove):
+        for _ in range(n_to_remove):
             self._pending_shutdowns.append(None)
             self._queue.put(_SHUTDOWNREQUEST)
 
@@ -265,9 +266,9 @@ class ThreadPool:
         if timeout is not None and timeout < 0:
             timeout = None
             warnings.warning(
-                    'In the future, negative timeouts to Server.stop() '
-                    'will be equivalent to a timeout of zero.',
-                    stacklevel=2,
+                'In the future, negative timeouts to Server.stop() '
+                'will be equivalent to a timeout of zero.',
+                stacklevel=2,
             )
 
         if timeout is not None:
@@ -279,10 +280,11 @@ class ThreadPool:
             self._queue.put(_SHUTDOWNREQUEST)
 
         ignored_errors = (
-                # TODO: explain this exception.
-                AssertionError,
-                # Ignore repeated Ctrl-C. See cherrypy#691.
-                KeyboardInterrupt,
+            # Raised when start_response called >1 time w/o exc_info or
+            # wsgi write is called before start_response. See cheroot#261
+            RuntimeError,
+            # Ignore repeated Ctrl-C. See cherrypy#691.
+            KeyboardInterrupt,
         )
 
         for worker in self._clear_threads():
@@ -317,9 +319,9 @@ class ThreadPool:
         # threads = pop_all(self._threads)
         threads, self._threads[:] = self._threads[:], []
         return (
-                thread
-                for thread in threads
-                if thread is not threading.currentThread()
+            thread
+            for thread in threads
+            if thread is not threading.current_thread()
         )
 
     @property

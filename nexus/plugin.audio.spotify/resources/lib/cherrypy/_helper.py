@@ -12,7 +12,6 @@ def expose(func=None, alias=None):
 
     Optionally provide an alias or set of aliases.
     """
-
     def expose_(func):
         func.exposed = True
         if alias is not None:
@@ -145,7 +144,7 @@ def popargs(*args, **kwargs):
 
     handler = None
     handler_call = False
-    for k, v in list(kwargs.items()):
+    for k, v in kwargs.items():
         if k == 'handler':
             handler = v
         else:

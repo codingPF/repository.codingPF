@@ -50,7 +50,7 @@ class Checker(object):
 
     def check_app_config_entries_dont_start_with_script_name(self):
         """Check for App config with sections that repeat script_name."""
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             if not app.config:
@@ -58,24 +58,24 @@ class Checker(object):
             if sn == '':
                 continue
             sn_atoms = sn.strip('/').split('/')
-            for key in list(app.config.keys()):
+            for key in app.config.keys():
                 key_atoms = key.strip('/').split('/')
                 if key_atoms[:len(sn_atoms)] == sn_atoms:
                     warnings.warn(
-                            'The application mounted at %r has config '
-                            'entries that start with its script name: %r' % (sn,
-                                                                             key))
+                        'The application mounted at %r has config '
+                        'entries that start with its script name: %r' % (sn,
+                                                                         key))
 
     def check_site_config_entries_in_app_config(self):
         """Check for mounted Applications that have site-scoped config."""
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
 
             msg = []
-            for section, entries in list(app.config.items()):
+            for section, entries in app.config.items():
                 if section.startswith('/'):
-                    for key, value in list(entries.items()):
+                    for key, value in entries.items():
                         for n in ('engine.', 'server.', 'tree.', 'checker.'):
                             if key.startswith(n):
                                 msg.append('[%s] %s = %s' %
@@ -91,7 +91,7 @@ class Checker(object):
 
     def check_skipped_app_config(self):
         """Check for mounted Applications that have no config."""
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             if not app.config:
@@ -107,24 +107,24 @@ class Checker(object):
 
     def check_app_config_brackets(self):
         """Check for App config with extraneous brackets in section names."""
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             if not app.config:
                 continue
-            for key in list(app.config.keys()):
+            for key in app.config.keys():
                 if key.startswith('[') or key.endswith(']'):
                     warnings.warn(
-                            'The application mounted at %r has config '
-                            'section names with extraneous brackets: %r. '
-                            'Config *files* need brackets; config *dicts* '
-                            '(e.g. passed to tree.mount) do not.' % (sn, key))
+                        'The application mounted at %r has config '
+                        'section names with extraneous brackets: %r. '
+                        'Config *files* need brackets; config *dicts* '
+                        '(e.g. passed to tree.mount) do not.' % (sn, key))
 
     def check_static_paths(self):
         """Check Application config for incorrect static paths."""
         # Use the dummy Request object in the main thread.
         request = cherrypy.request
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             request.app = app
@@ -149,19 +149,19 @@ class Checker(object):
                                 testdir = os.path.join(root, dir[1:])
                                 if os.path.exists(testdir):
                                     msg += (
-                                            '\nIf you meant to serve the '
-                                            'filesystem folder at %r, remove the '
-                                            'leading slash from dir.' % (testdir,))
+                                        '\nIf you meant to serve the '
+                                        'filesystem folder at %r, remove the '
+                                        'leading slash from dir.' % (testdir,))
                         else:
                             if not root:
                                 msg = (
-                                        'dir is a relative path and '
-                                        'no root provided.')
+                                    'dir is a relative path and '
+                                    'no root provided.')
                             else:
                                 fulldir = os.path.join(root, dir)
                                 if not os.path.isabs(fulldir):
                                     msg = ('%r is not an absolute path.' % (
-                                            fulldir,))
+                                        fulldir,))
 
                         if fulldir and not os.path.exists(fulldir):
                             if msg:
@@ -175,24 +175,24 @@ class Checker(object):
 
     # -------------------------- Compatibility -------------------------- #
     obsolete = {
-            'server.default_content_type': 'tools.response_headers.headers',
-            'log_access_file': 'log.access_file',
-            'log_config_options': None,
-            'log_file': 'log.error_file',
-            'log_file_not_found': None,
-            'log_request_headers': 'tools.log_headers.on',
-            'log_to_screen': 'log.screen',
-            'show_tracebacks': 'request.show_tracebacks',
-            'throw_errors': 'request.throw_errors',
-            'profiler.on': ('cherrypy.tree.mount(profiler.make_app('
-                            'cherrypy.Application(Root())))'),
+        'server.default_content_type': 'tools.response_headers.headers',
+        'log_access_file': 'log.access_file',
+        'log_config_options': None,
+        'log_file': 'log.error_file',
+        'log_file_not_found': None,
+        'log_request_headers': 'tools.log_headers.on',
+        'log_to_screen': 'log.screen',
+        'show_tracebacks': 'request.show_tracebacks',
+        'throw_errors': 'request.throw_errors',
+        'profiler.on': ('cherrypy.tree.mount(profiler.make_app('
+                        'cherrypy.Application(Root())))'),
     }
 
     deprecated = {}
 
     def _compat(self, config):
         """Process config and warn on each obsolete or deprecated entry."""
-        for section, conf in list(config.items()):
+        for section, conf in config.items():
             if isinstance(conf, dict):
                 for k in conf:
                     if k in self.obsolete:
@@ -214,7 +214,7 @@ class Checker(object):
     def check_compatibility(self):
         """Process config and warn on each obsolete or deprecated entry."""
         self._compat(cherrypy.config)
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             self._compat(app.config)
@@ -230,7 +230,7 @@ class Checker(object):
         ns.extend(cherrypy.config.namespaces)
         ns += self.extra_config_namespaces
 
-        for section, conf in list(app.config.items()):
+        for section, conf in app.config.items():
             is_path_section = section.startswith('/')
             if is_path_section and isinstance(conf, dict):
                 for k in conf:
@@ -241,27 +241,27 @@ class Checker(object):
                             # namespace is preceded by "cherrypy."
                             if atoms[0] == 'cherrypy' and atoms[1] in ns:
                                 msg = (
-                                        'The config entry %r is invalid; '
-                                        'try %r instead.\nsection: [%s]'
-                                        % (k, '.'.join(atoms[1:]), section))
+                                    'The config entry %r is invalid; '
+                                    'try %r instead.\nsection: [%s]'
+                                    % (k, '.'.join(atoms[1:]), section))
                             else:
                                 msg = (
-                                        'The config entry %r is invalid, '
-                                        'because the %r config namespace '
-                                        'is unknown.\n'
-                                        'section: [%s]' % (k, atoms[0], section))
+                                    'The config entry %r is invalid, '
+                                    'because the %r config namespace '
+                                    'is unknown.\n'
+                                    'section: [%s]' % (k, atoms[0], section))
                             warnings.warn(msg)
                         elif atoms[0] == 'tools':
                             if atoms[1] not in dir(cherrypy.tools):
                                 msg = (
-                                        'The config entry %r may be invalid, '
-                                        'because the %r tool was not found.\n'
-                                        'section: [%s]' % (k, atoms[1], section))
+                                    'The config entry %r may be invalid, '
+                                    'because the %r tool was not found.\n'
+                                    'section: [%s]' % (k, atoms[1], section))
                                 warnings.warn(msg)
 
     def check_config_namespaces(self):
         """Process config and warn on each unknown config namespace."""
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             self._known_ns(app)
@@ -270,7 +270,7 @@ class Checker(object):
     known_config_types = {}
 
     def _populate_known_types(self):
-        b = [x for x in list(vars(builtins).values())
+        b = [x for x in vars(builtins).values()
              if type(x) is type(str)]
 
         def traverse(obj, namespace):
@@ -292,10 +292,10 @@ class Checker(object):
         msg = ('The config entry %r in section %r is of type %r, '
                'which does not match the expected type %r.')
 
-        for section, conf in list(config.items()):
+        for section, conf in config.items():
             if not isinstance(conf, dict):
                 conf = {section: conf}
-            for k, v in list(conf.items()):
+            for k, v in conf.items():
                 if v is not None:
                     expected_type = self.known_config_types.get(k, None)
                     vtype = type(v)
@@ -306,7 +306,7 @@ class Checker(object):
     def check_config_types(self):
         """Assert that config values are of the same type as default values."""
         self._known_types(cherrypy.config)
-        for sn, app in list(cherrypy.tree.apps.items()):
+        for sn, app in cherrypy.tree.apps.items():
             if not isinstance(app, cherrypy.Application):
                 continue
             self._known_types(app.config)
@@ -314,7 +314,7 @@ class Checker(object):
     # -------------------- Specific config warnings -------------------- #
     def check_localhost(self):
         """Warn if any socket_host is 'localhost'. See #711."""
-        for k, v in list(cherrypy.config.items()):
+        for k, v in cherrypy.config.items():
             if k == 'server.socket_host' and v == 'localhost':
                 warnings.warn("The use of 'localhost' as a socket host can "
                               'cause problems on newer systems, since '

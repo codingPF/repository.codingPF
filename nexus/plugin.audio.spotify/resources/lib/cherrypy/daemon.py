@@ -19,7 +19,7 @@ def start(configfiles=None, daemonize=False, environment=None,
         cherrypy.config.update(c)
         # If there's only one app mounted, merge config into it.
         if len(cherrypy.tree.apps) == 1:
-            for app in list(cherrypy.tree.apps.values()):
+            for app in cherrypy.tree.apps.values():
                 if isinstance(app, Application):
                     app.merge(c)
 
@@ -54,9 +54,9 @@ def start(configfiles=None, daemonize=False, environment=None,
 
         addr = cherrypy.server.bind_addr
         cls = (
-                servers.FlupFCGIServer if fastcgi else
-                servers.FlupSCGIServer if scgi else
-                servers.FlupCGIServer
+            servers.FlupFCGIServer if fastcgi else
+            servers.FlupSCGIServer if scgi else
+            servers.FlupCGIServer
         )
         f = cls(application=cherrypy.tree, bindAddress=addr)
         s = servers.ServerAdapter(engine, httpserver=f, bind_addr=addr)

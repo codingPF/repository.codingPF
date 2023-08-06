@@ -116,12 +116,14 @@ import sys
 import cherrypy
 from cherrypy import _cperror
 
+
 # Silence the no-handlers "warning" (stderr write!) in stdlib logging
 logging.Logger.manager.emittedNoHandlerWarning = 1
 logfmt = logging.Formatter('%(message)s')
 
 
 class NullHandler(logging.Handler):
+
     """A no-op logging handler to silence the logging.lastResort handler."""
 
     def handle(self, record):
@@ -135,6 +137,7 @@ class NullHandler(logging.Handler):
 
 
 class LogManager(object):
+
     """An object to assist both simple and advanced logging.
 
     ``cherrypy.log`` is an instance of this class.
@@ -171,9 +174,9 @@ class LogManager(object):
             self.access_log = logging.getLogger('%s.access' % logger_root)
         else:
             self.error_log = logging.getLogger(
-                    '%s.error.%s' % (logger_root, appid))
+                '%s.error.%s' % (logger_root, appid))
             self.access_log = logging.getLogger(
-                    '%s.access.%s' % (logger_root, appid))
+                '%s.access.%s' % (logger_root, appid))
         self.error_log.setLevel(logging.INFO)
         self.access_log.setLevel(logging.INFO)
 
@@ -208,9 +211,9 @@ class LogManager(object):
             exc_info = _cperror._exc_info()
 
         self.error_log.log(
-                severity,
-                ' '.join((self.time(), context, msg)),
-                exc_info=exc_info,
+            severity,
+            ' '.join((self.time(), context, msg)),
+            exc_info=exc_info,
         )
 
     def __call__(self, *args, **kwargs):
@@ -260,7 +263,7 @@ class LogManager(object):
                  'i': request.unique_id,
                  'z': LazyRfc3339UtcTime(),
                  }
-        for k, v in list(atoms.items()):
+        for k, v in atoms.items():
             if not isinstance(v, str):
                 v = str(v)
             v = v.replace('"', '\\"').encode('utf8')
@@ -278,7 +281,7 @@ class LogManager(object):
 
         try:
             self.access_log.log(
-                    logging.INFO, self.access_log_format.format(**atoms))
+                logging.INFO, self.access_log_format.format(**atoms))
         except Exception:
             self(traceback=True)
 
@@ -411,6 +414,7 @@ class LogManager(object):
 
 
 class WSGIErrorHandler(logging.Handler):
+
     "A handler class which writes logging records to environ['wsgi.errors']."
 
     def flush(self):

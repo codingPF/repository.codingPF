@@ -55,4 +55,5 @@ def assert_native(n):
 # Some platforms don't expose HTTPSConnection, so handle it separately
 HTTPSConnection = getattr(http.client, 'HTTPSConnection', None)
 
+
 text_or_bytes = str, bytes

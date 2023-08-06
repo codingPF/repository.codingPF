@@ -7,11 +7,13 @@
     Get channellogos from kodidb or logosdb
 """
 
-import sys
-
+import os, sys
+if sys.version_info.major == 3:
+    from .utils import get_json, get_clean_image
+else:
+    from utils import get_json, get_clean_image
 import xbmc
 import xbmcvfs
-from .utils import get_clean_image
 
 
 class ChannelLogos(object):
@@ -20,7 +22,10 @@ class ChannelLogos(object):
     def __init__(self, kodidb=None):
         """Initialize - optionaly provide KodiDb object"""
         if not kodidb:
-            from .kodidb import KodiDb
+            if sys.version_info.major == 3:
+                from .kodidb import KodiDb
+            else:
+                from kodidb import KodiDb
             self.kodidb = KodiDb()
         else:
             self.kodidb = kodidb
@@ -39,12 +44,12 @@ class ChannelLogos(object):
         result = ""
         if xbmc.getCondVisibility("PVR.HasTVChannels"):
             results = self.kodidb.get_json(
-                    'PVR.GetChannels',
-                    fields=["thumbnail"],
-                    returntype="tvchannels",
-                    optparam=(
-                            "channelgroupid",
-                            "alltv"))
+                'PVR.GetChannels',
+                fields=["thumbnail"],
+                returntype="tvchannels",
+                optparam=(
+                    "channelgroupid",
+                    "alltv"))
             for item in results:
                 if item["label"] == searchphrase:
                     channelicon = get_clean_image(item['thumbnail'])

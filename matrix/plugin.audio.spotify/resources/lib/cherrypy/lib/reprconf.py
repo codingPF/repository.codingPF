@@ -27,6 +27,7 @@ from cherrypy._cpcompat import text_or_bytes
 
 
 class NamespaceSet(dict):
+
     """A dict of config namespace names and handlers.
 
     Each config entry should begin with a namespace name; the corresponding
@@ -61,18 +62,18 @@ class NamespaceSet(dict):
 
         # I chose __enter__ and __exit__ so someday this could be
         # rewritten using 'with' statement:
-        # for ns, handler in list(self.items()):
+        # for ns, handler in self.items():
         #     with handler as callable:
-        #         for k, v in list(ns_confs.get(ns, {}).items()):
+        #         for k, v in ns_confs.get(ns, {}).items():
         #             callable(k, v)
-        for ns, handler in list(self.items()):
+        for ns, handler in self.items():
             exit = getattr(handler, '__exit__', None)
             if exit:
                 callable = handler.__enter__()
                 no_exc = True
                 try:
                     try:
-                        for k, v in list(ns_confs.get(ns, {}).items()):
+                        for k, v in ns_confs.get(ns, {}).items():
                             callable(k, v)
                     except Exception:
                         # The exceptional case is handled here
@@ -87,7 +88,7 @@ class NamespaceSet(dict):
                     if no_exc and exit:
                         exit(None, None, None)
             else:
-                for k, v in list(ns_confs.get(ns, {}).items()):
+                for k, v in ns_confs.get(ns, {}).items():
                     handler(k, v)
 
     def __repr__(self):
@@ -98,11 +99,11 @@ class NamespaceSet(dict):
         newobj = self.__class__()
         newobj.update(self)
         return newobj
-
     copy = __copy__
 
 
 class Config(dict):
+
     """A dict-like set of configuration data, with defaults and namespaces.
 
     May take a file, filename, or dict.
@@ -146,6 +147,7 @@ class Config(dict):
 
 
 class Parser(configparser.ConfigParser):
+
     """Sub-class of ConfigParser that keeps the case of options and that
     raises an exception if the file cannot be read.
     """
@@ -198,10 +200,10 @@ class Parser(configparser.ConfigParser):
     def load(self, input):
         """Resolve 'input' to dict from a dict, file, or filename."""
         is_file = (
-                # Filename
-                isinstance(input, text_or_bytes)
-                # Open file object
-                or hasattr(input, 'read')
+            # Filename
+            isinstance(input, text_or_bytes)
+            # Open file object
+            or hasattr(input, 'read')
         )
         return Parser().dict_from_file(input) if is_file else input.copy()
 
@@ -258,7 +260,7 @@ class _Builder:
                     raise TypeError('Invalid argument for call.'
                                     'Must be a mapping object.')
                 # give preference to the keys set directly from arg=value
-                for k, v in list(rst.items()):
+                for k, v in rst.items():
                     if k not in kwargs:
                         kwargs[k] = v
             else:  # defined on the call as: arg=value
@@ -336,11 +338,11 @@ class _Builder:
     build_Constant = build_NameConstant  # Python 3.8 change
 
     def build_UnaryOp(self, o):
-        op, operand = list(map(self.build, [o.op, o.operand]))
+        op, operand = map(self.build, [o.op, o.operand])
         return op(operand)
 
     def build_BinOp(self, o):
-        left, op, right = list(map(self.build, [o.left, o.op, o.right]))
+        left, op, right = map(self.build, [o.left, o.op, o.right])
         return op(left, right)
 
     def build_Add(self, o):

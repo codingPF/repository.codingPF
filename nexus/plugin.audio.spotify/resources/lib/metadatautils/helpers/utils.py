@@ -3,7 +3,7 @@
 
 """Various generic helper methods"""
 
-import os
+import os, sys
 import xbmcgui
 import xbmc
 import xbmcvfs
@@ -13,7 +13,6 @@ import requests
 import arrow
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
-
 if sys.version_info.major == 3:
     import traceback
     from urllib.parse import unquote
@@ -32,10 +31,10 @@ except Exception:
 
 try:
     from multiprocessing.pool import ThreadPool
-
     SUPPORTS_POOL = True
 except Exception:
     SUPPORTS_POOL = False
+
 
 ADDON_ID = "script.module.metadatautils"
 KODI_LANGUAGE = xbmc.getLanguage(xbmc.ISO_639_1)
@@ -76,8 +75,7 @@ def log_exception(modulename, exceptiondetails):
     if sys.version_info.major == 3:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-        log_msg("Exception details: Type: %s Value: %s Traceback: %s" % (
-        exc_type.__name__, exc_value, ''.join(line for line in lines)), xbmc.LOGWARNING)
+        log_msg("Exception details: Type: %s Value: %s Traceback: %s" % (exc_type.__name__, exc_value, ''.join(line for line in lines)), xbmc.LOGWARNING)
     else:
         log_msg(format_exc(sys.exc_info()), xbmc.LOGWARNING)
     log_msg("Exception in %s ! --> %s" % (modulename, exceptiondetails), xbmc.LOGERROR)
@@ -100,9 +98,9 @@ def rate_limiter(rl_params):
     if (prev_timestamp + rl_delay) > cur_timestamp:
         sec_to_wait = (prev_timestamp + rl_delay) - cur_timestamp
         log_msg(
-                "Rate limiter active for %s - delaying request with %s seconds - "
-                "Configure a personal API key in the settings to get rid of this message and the delay." %
-                (rl_name, sec_to_wait), xbmc.LOGINFO)
+            "Rate limiter active for %s - delaying request with %s seconds - "
+            "Configure a personal API key in the settings to get rid of this message and the delay." %
+            (rl_name, sec_to_wait), xbmc.LOGINFO)
         while sec_to_wait and not monitor.abortRequested():
             monitor.waitForAbort(1)
             # keep setting the timestamp to create some sort of queue
@@ -161,12 +159,12 @@ def get_xml(url, params=None, retries=0, ratelimit=None):
         response = requests.get(url, params=params, timeout=20)
         if response and response.content and response.status_code == 200:
             tree = ET.fromstring(response.content)
-            # child = tree.find('movie')
-            if (len(tree)):
+            #child = tree.find('movie')
+            if(len(tree)):
                 child = tree[0]
-            # log_exception(__name__, child)
-            for attrName, attrValue in list(child.items()):
-                result.update({attrName: attrValue})
+            #log_exception(__name__, child)
+            for attrName, attrValue in child.items():
+                result.update({attrName : attrValue})
         elif response.status_code in (429, 503, 504):
             raise Exception('Read timed out')
     except Exception as exc:
@@ -180,12 +178,15 @@ def get_xml(url, params=None, retries=0, ratelimit=None):
         else:
             log_exception(__name__, exc)
     return result
-
+    
 
 def try_encode(text, encoding="utf-8"):
     """helper to encode a string to utf-8"""
     try:
-        return text
+        if sys.version_info.major == 3:
+            return text
+        else:
+            return text.encode(encoding, "ignore")
     except Exception:
         return text
 
@@ -193,7 +194,10 @@ def try_encode(text, encoding="utf-8"):
 def try_decode(text, encoding="utf-8"):
     """helper to decode a string to unicode"""
     try:
-        return text
+        if sys.version_info.major == 3:
+            return text
+        else:
+            return text.decode(encoding, "ignore")
     except Exception:
         return text
 
@@ -240,7 +244,10 @@ def process_method_on_list(method_to_run, items):
             except Exception:
                 log_msg(format_exc(sys.exc_info()))
             log_msg("Error while executing %s with %s" % (method_to_run, items))
-        all_items = list([f for f in all_items if f])
+        if sys.version_info.major == 3:
+            all_items = list(filter(None, all_items))
+        else:
+            all_items = filter(None, all_items)
     return all_items
 
 
@@ -257,7 +264,10 @@ def get_clean_image(image):
         image = thumbcache
     if image and "image://" in image:
         image = image.replace("image://", "")
-        image = unquote(image)
+        if sys.version_info.major == 3:
+            image = unquote(image)
+        else:
+            image = unquote(image.encode("utf-8"))
         if image.endswith("/"):
             image = image[:-1]
     if sys.version_info.major < 3:
@@ -271,27 +281,30 @@ def get_duration(duration):
     if not duration:
         return {}
     if sys.version_info.major == 3:
-        duration.replace("min", "").replace("", "").replace(".", "")
+        if isinstance(duration, str):
+            duration.replace("min", "").replace("", "").replace(".", "")
+    else:
+        if isinstance(duration, (unicode, str)):
+            duration.replace("min", "").replace("", "").replace(".", "")
     try:
         total_minutes = int(duration)
         if total_minutes < 60:
             hours = 0
         else:
-            hours = total_minutes // 60 % 60
+            hours = total_minutes  // 60 % 60
         minutes = total_minutes - (hours * 60)
         formatted_time = "%s:%s" % (hours, str(minutes).zfill(2))
     except Exception as exc:
         log_exception(__name__, exc)
         return {}
     return {
-            "Duration": formatted_time,
-            "Duration.Hours": hours,
-            "Duration.Minutes": minutes,
-            "Runtime": total_minutes,
-            "RuntimeExtended": "%s %s" % (total_minutes, xbmc.getLocalizedString(12391)),
-            "DurationAndRuntime": "%s (%s min.)" % (formatted_time, total_minutes),
-            "DurationAndRuntimeExtended": "%s (%s %s)" % (
-            formatted_time, total_minutes, xbmc.getLocalizedString(12391))
+        "Duration": formatted_time,
+        "Duration.Hours": hours,
+        "Duration.Minutes": minutes,
+        "Runtime": total_minutes,
+        "RuntimeExtended": "%s %s" % (total_minutes, xbmc.getLocalizedString(12391)),
+        "DurationAndRuntime": "%s (%s min.)" % (formatted_time, total_minutes),
+        "DurationAndRuntimeExtended": "%s (%s %s)" % (formatted_time, total_minutes, xbmc.getLocalizedString(12391))
     }
 
 
@@ -325,33 +338,91 @@ def extend_dict(org_dict, new_dict, allow_overwrite=None):
         return org_dict
     if not org_dict:
         return new_dict
-    for key, value in list(new_dict.items()):
-        if value:
-            if not org_dict.get(key):
-                # orginal dict doesn't has this key (or no value), just overwrite
-                org_dict[key] = value
-            else:
-                # original dict already has this key, append results
-                if isinstance(value, list):
-                    # make sure that our original value also is a list
-                    if isinstance(org_dict[key], list):
-                        for item in value:
-                            if item not in org_dict[key]:
-                                org_dict[key].append(item)
-                    # previous value was str, combine both in list
-                    elif isinstance(org_dict[key], str):
-                        org_dict[key] = org_dict[key].split(" / ")
-                        for item in value:
-                            if item not in org_dict[key]:
-                                org_dict[key].append(item)
-                elif isinstance(value, dict):
-                    org_dict[key] = extend_dict(org_dict[key], value, allow_overwrite)
-                elif allow_overwrite and key in allow_overwrite:
-                    # value may be overwritten
+    if sys.version_info.major == 3:
+        for key, value in new_dict.items():
+            if value:
+                if not org_dict.get(key):
+                    # orginal dict doesn't has this key (or no value), just overwrite
                     org_dict[key] = value
                 else:
-                    # conflict, leave alone
-                    pass
+                    # original dict already has this key, append results
+                    if isinstance(value, list):
+                        # make sure that our original value also is a list
+                        if isinstance(org_dict[key], list):
+                            for item in value:
+                                if item not in org_dict[key]:
+                                    org_dict[key].append(item)
+                        # previous value was str, combine both in list
+                        elif isinstance(org_dict[key], str):
+                            org_dict[key] = org_dict[key].split(" / ")
+                            for item in value:
+                                if item not in org_dict[key]:
+                                    org_dict[key].append(item)
+                    elif isinstance(value, dict):
+                        org_dict[key] = extend_dict(org_dict[key], value, allow_overwrite)
+                    elif allow_overwrite and key in allow_overwrite:
+                        # value may be overwritten
+                        org_dict[key] = value
+                    else:
+                        # conflict, leave alone
+                        pass
+    else:
+        if sys.version_info.major == 3:
+            for key, value in new_dict.items():
+                if value:
+                    if not org_dict.get(key):
+                        # orginal dict doesn't has this key (or no value), just overwrite
+                        org_dict[key] = value
+                    else:
+                        # original dict already has this key, append results
+                        if isinstance(value, list):
+                            # make sure that our original value also is a list
+                            if isinstance(org_dict[key], list):
+                                for item in value:
+                                    if item not in org_dict[key]:
+                                        org_dict[key].append(item)
+                            # previous value was str, combine both in list
+                            elif isinstance(org_dict[key], str):
+                                org_dict[key] = org_dict[key].split(" / ")
+                                for item in value:
+                                    if item not in org_dict[key]:
+                                        org_dict[key].append(item)
+                        elif isinstance(value, dict):
+                            org_dict[key] = extend_dict(org_dict[key], value, allow_overwrite)
+                        elif allow_overwrite and key in allow_overwrite:
+                            # value may be overwritten
+                            org_dict[key] = value
+                        else:
+                            # conflict, leave alone
+                            pass
+        else:
+            for key, value in new_dict.iteritems():
+                if value:
+                    if not org_dict.get(key):
+                        # orginal dict doesn't has this key (or no value), just overwrite
+                        org_dict[key] = value
+                    else:
+                        # original dict already has this key, append results
+                        if isinstance(value, list):
+                            # make sure that our original value also is a list
+                            if isinstance(org_dict[key], list):
+                                for item in value:
+                                    if item not in org_dict[key]:
+                                        org_dict[key].append(item)
+                            # previous value was str, combine both in list
+                            elif isinstance(org_dict[key], (str, unicode)):
+                                org_dict[key] = org_dict[key].split(" / ")
+                                for item in value:
+                                    if item not in org_dict[key]:
+                                        org_dict[key].append(item)
+                        elif isinstance(value, dict):
+                            org_dict[key] = extend_dict(org_dict[key], value, allow_overwrite)
+                        elif allow_overwrite and key in allow_overwrite:
+                            # value may be overwritten
+                            org_dict[key] = value
+                        else:
+                            # conflict, leave alone
+                            pass
 
     return org_dict
 
@@ -444,7 +515,7 @@ def detect_plugin_content(plugin_path):
         content_type = "movies"
     # if we didn't get the content based on the path, we need to probe the addon...
     if not content_type and not xbmc.getCondVisibility("Window.IsMedia"):  # safety check
-        from .kodidb import KodiDb
+        from kodidb import KodiDb
         media_array = KodiDb().files(plugin_path, limits=(0, 1))
         for item in media_array:
             if item.get("filetype", "") == "directory":
@@ -506,69 +577,118 @@ def download_artwork(folderpath, artwork):
     new_dict = {}
     if not xbmcvfs.exists(folderpath):
         xbmcvfs.mkdir(folderpath)
-
-    for key, value in list(artwork.items()):
-        if key == "fanart":
-            new_dict[key] = download_image(os.path.join(folderpath, "fanart.jpg"), value)
-        elif key == "thumb":
-            new_dict[key] = download_image(os.path.join(folderpath, "folder.jpg"), value)
-        elif key == "discart":
-            new_dict[key] = download_image(os.path.join(folderpath, "disc.png"), value)
-        elif key == "banner":
-            new_dict[key] = download_image(os.path.join(folderpath, "banner.jpg"), value)
-        elif key == "clearlogo":
-            new_dict[key] = download_image(os.path.join(folderpath, "logo.png"), value)
-        elif key == "clearart":
-            new_dict[key] = download_image(os.path.join(folderpath, "clearart.png"), value)
-        elif key == "characterart":
-            new_dict[key] = download_image(os.path.join(folderpath, "characterart.png"), value)
-        elif key == "poster":
-            new_dict[key] = download_image(os.path.join(folderpath, "poster.jpg"), value)
-        elif key == "landscape":
-            new_dict[key] = download_image(os.path.join(folderpath, "landscape.jpg"), value)
-        elif key == "thumbback":
-            new_dict[key] = download_image(os.path.join(folderpath, "thumbback.jpg"), value)
-        elif key == "spine":
-            new_dict[key] = download_image(os.path.join(folderpath, "spine.jpg"), value)
-        elif key == "album3Dthumb":
-            new_dict[key] = download_image(os.path.join(folderpath, "album3Dthumb.png"), value)
-        elif key == "album3Dflat":
-            new_dict[key] = download_image(os.path.join(folderpath, "album3Dflat.png"), value)
-        elif key == "album3Dcase":
-            new_dict[key] = download_image(os.path.join(folderpath, "album3Dcase.png"), value)
-        elif key == "album3Dface":
-            new_dict[key] = download_image(os.path.join(folderpath, "album3Dface.png"), value)
-        elif key == "fanarts" and value:
-            # copy extrafanarts only if the directory doesn't exist at all
-            delim = "\\" if "\\" in folderpath else "/"
-            efa_path = "%sextrafanart" % folderpath + delim
-            if not xbmcvfs.exists(efa_path):
-                xbmcvfs.mkdir(efa_path)
-                images = []
-                for count, image in enumerate(value):
-                    image = download_image(os.path.join(efa_path, "fanart%s.jpg" % count),
-                                           image)
-                    images.append(image)
-                    if LIMIT_EXTRAFANART and count == LIMIT_EXTRAFANART:
-                        break
-                new_dict[key] = images
-        elif key == "posters" and value:
-            # copy extraposters only if the directory doesn't exist at all
-            delim = "\\" if "\\" in folderpath else "/"
-            efa_path = "%sextraposter" % folderpath + delim
-            if not xbmcvfs.exists(efa_path):
-                xbmcvfs.mkdir(efa_path)
-                images = []
-                for count, image in enumerate(value):
-                    image = download_image(os.path.join(efa_path, "poster%s.jpg" % count),
-                                           image)
-                    images.append(image)
-                    if LIMIT_EXTRAFANART and count == LIMIT_EXTRAFANART:
-                        break
-                new_dict[key] = images
-        else:
-            new_dict[key] = value
-
+    if sys.version_info.major == 3:
+        for key, value in artwork.items():
+            if key == "fanart":
+                new_dict[key] = download_image(os.path.join(folderpath, "fanart.jpg"), value)
+            elif key == "thumb":
+                new_dict[key] = download_image(os.path.join(folderpath, "folder.jpg"), value)
+            elif key == "discart":
+                new_dict[key] = download_image(os.path.join(folderpath, "disc.png"), value)
+            elif key == "banner":
+                new_dict[key] = download_image(os.path.join(folderpath, "banner.jpg"), value)
+            elif key == "clearlogo":
+                new_dict[key] = download_image(os.path.join(folderpath, "logo.png"), value)
+            elif key == "clearart":
+                new_dict[key] = download_image(os.path.join(folderpath, "clearart.png"), value)
+            elif key == "characterart":
+                new_dict[key] = download_image(os.path.join(folderpath, "characterart.png"), value)
+            elif key == "poster":
+                new_dict[key] = download_image(os.path.join(folderpath, "poster.jpg"), value)
+            elif key == "landscape":
+                new_dict[key] = download_image(os.path.join(folderpath, "landscape.jpg"), value)
+            elif key == "thumbback":
+                new_dict[key] = download_image(os.path.join(folderpath, "thumbback.jpg"), value)
+            elif key == "spine":
+                new_dict[key] = download_image(os.path.join(folderpath, "spine.jpg"), value)
+            elif key == "album3Dthumb":
+                new_dict[key] = download_image(os.path.join(folderpath, "album3Dthumb.png"), value)
+            elif key == "album3Dflat":
+                new_dict[key] = download_image(os.path.join(folderpath, "album3Dflat.png"), value)
+            elif key == "album3Dcase":
+                new_dict[key] = download_image(os.path.join(folderpath, "album3Dcase.png"), value)
+            elif key == "album3Dface":
+                new_dict[key] = download_image(os.path.join(folderpath, "album3Dface.png"), value)
+            elif key == "fanarts" and value:
+                # copy extrafanarts only if the directory doesn't exist at all
+                delim = "\\" if "\\" in folderpath else "/"
+                efa_path = "%sextrafanart" % folderpath + delim
+                if not xbmcvfs.exists(efa_path):
+                    xbmcvfs.mkdir(efa_path)
+                    images = []
+                    for count, image in enumerate(value):
+                        image = download_image(os.path.join(efa_path, "fanart%s.jpg" % count), image)
+                        images.append(image)
+                        if LIMIT_EXTRAFANART and count == LIMIT_EXTRAFANART:
+                            break
+                    new_dict[key] = images
+            elif key == "posters" and value:
+                # copy extraposters only if the directory doesn't exist at all
+                delim = "\\" if "\\" in folderpath else "/"
+                efa_path = "%sextraposter" % folderpath + delim
+                if not xbmcvfs.exists(efa_path):
+                    xbmcvfs.mkdir(efa_path)
+                    images = []
+                    for count, image in enumerate(value):
+                        image = download_image(os.path.join(efa_path, "poster%s.jpg" % count), image)
+                        images.append(image)
+                        if LIMIT_EXTRAFANART and count == LIMIT_EXTRAFANART:
+                            break
+                    new_dict[key] = images
+            else:
+                new_dict[key] = value
+    else:
+        for key, value in artwork.iteritems():
+            if key == "fanart":
+                new_dict[key] = download_image(os.path.join(folderpath, "fanart.jpg"), value)
+            elif key == "thumb":
+                new_dict[key] = download_image(os.path.join(folderpath, "folder.jpg"), value)
+            elif key == "discart":
+                new_dict[key] = download_image(os.path.join(folderpath, "disc.png"), value)
+            elif key == "banner":
+                new_dict[key] = download_image(os.path.join(folderpath, "banner.jpg"), value)
+            elif key == "clearlogo":
+                new_dict[key] = download_image(os.path.join(folderpath, "logo.png"), value)
+            elif key == "clearart":
+                new_dict[key] = download_image(os.path.join(folderpath, "clearart.png"), value)
+            elif key == "characterart":
+                new_dict[key] = download_image(os.path.join(folderpath, "characterart.png"), value)
+            elif key == "poster":
+                new_dict[key] = download_image(os.path.join(folderpath, "poster.jpg"), value)
+            elif key == "landscape":
+                new_dict[key] = download_image(os.path.join(folderpath, "landscape.jpg"), value)
+            elif key == "thumbback":
+                new_dict[key] = download_image(os.path.join(folderpath, "thumbback.jpg"), value)
+            elif key == "spine":
+                new_dict[key] = download_image(os.path.join(folderpath, "spine.jpg"), value)
+            elif key == "fanarts" and value:
+                # copy extrafanarts only if the directory doesn't exist at all
+                delim = "\\" if "\\" in folderpath else "/"
+                efa_path = "%sextrafanart" % folderpath + delim
+                if not xbmcvfs.exists(efa_path):
+                    xbmcvfs.mkdir(efa_path)
+                    images = []
+                    for count, image in enumerate(value):
+                        image = download_image(os.path.join(efa_path, "fanart%s.jpg" % count), image)
+                        images.append(image)
+                        if LIMIT_EXTRAFANART and count == LIMIT_EXTRAFANART:
+                            break
+                    new_dict[key] = images
+            elif key == "posters" and value:
+                # copy extraposters only if the directory doesn't exist at all
+                delim = "\\" if "\\" in folderpath else "/"
+                efa_path = "%sextraposter" % folderpath + delim
+                if not xbmcvfs.exists(efa_path):
+                    xbmcvfs.mkdir(efa_path)
+                    images = []
+                    for count, image in enumerate(value):
+                        image = download_image(os.path.join(efa_path, "poster%s.jpg" % count), image)
+                        images.append(image)
+                        if LIMIT_EXTRAFANART and count == LIMIT_EXTRAFANART:
+                            break
+                    new_dict[key] = images
+            else:
+                new_dict[key] = value
     if efa_path:
         new_dict["extrafanart"] = efa_path
     return new_dict
@@ -597,21 +717,28 @@ def download_image(filename, url):
 def refresh_image(imagepath):
     """tell kodi texture cache to refresh a particular image"""
     import sqlite3
-    dbpath = xbmcvfs.translatePath("special://database/Textures13.db")
+    if sys.version_info.major == 3:
+        dbpath = xbmcvfs.translatePath("special://database/Textures13.db")
+    else:
+        dbpath = xbmc.translatePath("special://database/Textures13.db").decode('utf-8')
     connection = sqlite3.connect(dbpath, timeout=30, isolation_level=None)
     try:
-        cache_image = connection.execute('SELECT cachedurl FROM texture WHERE url = ?',
-                                         (imagepath,)).fetchone()
-        if cache_image and isinstance(cache_image, str):
-            if xbmcvfs.exists(cache_image):
-                xbmcvfs.delete("special://profile/Thumbnails/%s" % cache_image)
-            connection.execute('DELETE FROM texture WHERE url = ?', (imagepath,))
+        cache_image = connection.execute('SELECT cachedurl FROM texture WHERE url = ?', (imagepath,)).fetchone()
+        if sys.version_info.major == 3:
+            if cache_image and isinstance(cache_image, str):
+                if xbmcvfs.exists(cache_image):
+                    xbmcvfs.delete("special://profile/Thumbnails/%s" % cache_image)
+                connection.execute('DELETE FROM texture WHERE url = ?', (imagepath,))
+        else:
+            if cache_image and isinstance(cache_image, (unicode, str)):
+                if xbmcvfs.exists(cache_image):
+                    xbmcvfs.delete("special://profile/Thumbnails/%s" % cache_image)
+                connection.execute('DELETE FROM texture WHERE url = ?', (imagepath,))
         connection.close()
     except Exception as exc:
         log_exception(__name__, exc)
     finally:
         del connection
-
 
 # pylint: disable-msg=too-many-local-variables
 
@@ -622,8 +749,7 @@ def manual_set_artwork(artwork, mediatype, header=None):
     if mediatype == "artist":
         art_types = ["thumb", "poster", "fanart", "banner", "clearart", "clearlogo", "landscape"]
     elif mediatype == "album":
-        art_types = ["thumb", "discart", "thumbback", "spine", "album3Dthumb", "album3Dflat",
-                     "album3Dcase", "album3Dface"]
+        art_types = ["thumb", "discart", "thumbback", "spine", "album3Dthumb", "album3Dflat", "album3Dcase", "album3Dface"]
     else:
         art_types = ["thumb", "poster", "fanart", "banner", "clearart",
                      "clearlogo", "discart", "landscape", "characterart"]
@@ -652,8 +778,12 @@ def manual_set_artwork(artwork, mediatype, header=None):
             # show results for selected art type
             artoptions = []
             selected_item = listitems[selected_item]
-            image = selected_item.getProperty("icon")
-            label = selected_item.getLabel()
+            if sys.version_info.major == 3:
+                image = selected_item.getProperty("icon")
+                label = selected_item.getLabel()
+            else:
+                image = selected_item.getProperty("icon").decode("utf-8")
+                label = selected_item.getLabel().decode("utf-8")
             subheader = "%s: %s" % (header, label)
             if image:
                 # current image
@@ -680,8 +810,7 @@ def manual_set_artwork(artwork, mediatype, header=None):
                 listitem.setProperty("icon", item)
                 artoptions.append(listitem)
 
-            dialog = DialogSelect("DialogSelect.xml", "", listing=artoptions,
-                                  window_title=subheader)
+            dialog = DialogSelect("DialogSelect.xml", "", listing=artoptions, window_title=subheader)
             dialog.doModal()
             selected_item = dialog.result
             del dialog
@@ -696,8 +825,12 @@ def manual_set_artwork(artwork, mediatype, header=None):
             elif (image and selected_item == 2) or (not image and selected_item == 0):
                 # manual browse...
                 dialog = xbmcgui.Dialog()
-                image = dialog.browse(2, xbmc.getLocalizedString(1030),
+                if sys.version_info.major == 3:
+                    image = dialog.browse(2, xbmc.getLocalizedString(1030),
                                       'files', mask='.gif|.png|.jpg')
+                else:
+                    image = dialog.browse(2, xbmc.getLocalizedString(1030),
+                                      'files', mask='.gif|.png|.jpg').decode("utf-8")
                 del dialog
                 if image:
                     artwork[label] = image
@@ -705,7 +838,6 @@ def manual_set_artwork(artwork, mediatype, header=None):
 
     # return endresult
     return changemade, artwork
-
 
 # pylint: enable-msg=too-many-local-variables
 
@@ -739,7 +871,7 @@ class DialogSelect(xbmcgui.WindowXMLDialog):
 
     def onAction(self, action):
         """On kodi action"""
-        if action.getId() in (9, 10, 92, 216, 247, 257, 275, 61467, 61448,):
+        if action.getId() in (9, 10, 92, 216, 247, 257, 275, 61467, 61448, ):
             self.result = -1
             self.close()
 

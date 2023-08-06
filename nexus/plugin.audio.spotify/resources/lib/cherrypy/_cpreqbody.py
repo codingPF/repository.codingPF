@@ -171,12 +171,12 @@ def process_urlencoded(entity):
             break
     else:
         raise cherrypy.HTTPError(
-                400, 'The request entity could not be decoded. The following '
-                     'charsets were attempted: %s' % repr(entity.attempt_charsets))
+            400, 'The request entity could not be decoded. The following '
+            'charsets were attempted: %s' % repr(entity.attempt_charsets))
 
     # Now that all values have been successfully parsed and decoded,
     # apply them to the entity.params dict.
-    for key, value in list(params.items()):
+    for key, value in params.items():
         if key in entity.params:
             if not isinstance(entity.params[key], list):
                 entity.params[key] = [entity.params[key]]
@@ -277,6 +277,7 @@ def _old_process_multipart(entity):
 
 # -------------------------------- Entities --------------------------------- #
 class Entity(object):
+
     """An HTTP request body, or MIME multipart body.
 
     This class collects information about the HTTP request entity. When a
@@ -427,7 +428,7 @@ class Entity(object):
             self.content_type = self.content_type[0]
         else:
             self.content_type = httputil.HeaderElement.from_str(
-                    self.default_content_type)
+                self.default_content_type)
 
         # Copy the class 'attempt_charsets', prepending any Content-Type
         # charset
@@ -443,8 +444,8 @@ class Entity(object):
         clen = headers.get('Content-Length', None)
         # If Transfer-Encoding is 'chunked', ignore any Content-Length.
         if (
-                clen is not None and
-                'chunked' not in headers.get('Transfer-Encoding', '')
+            clen is not None and
+            'chunked' not in headers.get('Transfer-Encoding', '')
         ):
             try:
                 self.length = int(clen)
@@ -464,8 +465,8 @@ class Entity(object):
             if 'filename' in disp.params:
                 self.filename = disp.params['filename']
                 if (
-                        self.filename.startswith('"') and
-                        self.filename.endswith('"')
+                    self.filename.startswith('"') and
+                    self.filename.endswith('"')
                 ):
                     self.filename = self.filename[1:-1]
             if 'filename*' in disp.params:
@@ -491,7 +492,7 @@ class Entity(object):
             raise StopIteration
         return line
 
-    def get_next(self):
+    def next(self):
         return self.__next__()
 
     def read_into_file(self, fp_out=None):
@@ -535,9 +536,9 @@ class Entity(object):
                 return value
         else:
             raise cherrypy.HTTPError(
-                    400,
-                    'The request entity could not be decoded. The following '
-                    'charsets were attempted: %s' % repr(self.attempt_charsets)
+                400,
+                'The request entity could not be decoded. The following '
+                'charsets were attempted: %s' % repr(self.attempt_charsets)
             )
 
     def process(self):
@@ -568,6 +569,7 @@ class Entity(object):
 
 
 class Part(Entity):
+
     """A MIME part entity, part of a multipart entity."""
 
     # "The default character set, which must be assumed in the absence of a
@@ -818,7 +820,7 @@ class SizedReader:
                 if e.__class__.__name__ == 'MaxSizeExceeded':
                     # Post data is too big
                     raise cherrypy.HTTPError(
-                            413, 'Maximum request length: %r' % e.args[1])
+                        413, 'Maximum request length: %r' % e.args[1])
                 else:
                     raise
             if not data:
@@ -910,12 +912,13 @@ class SizedReader:
                 if e.__class__.__name__ == 'MaxSizeExceeded':
                     # Post data is too big
                     raise cherrypy.HTTPError(
-                            413, 'Maximum request length: %r' % e.args[1])
+                        413, 'Maximum request length: %r' % e.args[1])
                 else:
                     raise
 
 
 class RequestBody(Entity):
+
     """The entity of the HTTP request."""
 
     bufsize = 8 * 1024
@@ -981,7 +984,7 @@ class RequestBody(Entity):
         # Body params should also be a part of the request_params
         # add them in here.
         request_params = self.request_params
-        for key, value in list(self.params.items()):
+        for key, value in self.params.items():
             if key in request_params:
                 if not isinstance(request_params[key], list):
                     request_params[key] = [request_params[key]]

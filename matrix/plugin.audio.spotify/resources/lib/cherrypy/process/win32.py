@@ -11,6 +11,7 @@ from cherrypy.process import wspbus, plugins
 
 
 class ConsoleCtrlHandler(plugins.SimplePlugin):
+
     """A WSPBus plugin for handling Win32 console events (like Ctrl-C)."""
 
     def __init__(self, bus):
@@ -68,6 +69,7 @@ class ConsoleCtrlHandler(plugins.SimplePlugin):
 
 
 class Win32Bus(wspbus.Bus):
+
     """A Web Site Process Bus implementation for Win32.
 
     Instead of time.sleep, this bus blocks using native win32event objects.
@@ -109,7 +111,7 @@ class Win32Bus(wspbus.Bus):
             if self.state not in state:
                 events = tuple([self._get_state_event(s) for s in state])
                 win32event.WaitForMultipleObjects(
-                        events, 0, win32event.INFINITE)
+                    events, 0, win32event.INFINITE)
         else:
             # Don't wait for an event that beat us to the punch ;)
             if self.state != state:
@@ -118,6 +120,7 @@ class Win32Bus(wspbus.Bus):
 
 
 class _ControlCodes(dict):
+
     """Control codes used to "signal" a service via ControlService.
 
     User-defined control codes are in the range 128-255. We generally use
@@ -130,7 +133,7 @@ class _ControlCodes(dict):
 
     def key_for(self, obj):
         """For the given value, return its corresponding key."""
-        for key, val in list(self.items()):
+        for key, val in self.items():
             if val is obj:
                 return key
         raise ValueError('The given object could not be found: %r' % obj)
@@ -149,13 +152,14 @@ def signal_child(service, command):
 
 
 class PyWebService(win32serviceutil.ServiceFramework):
+
     """Python Web Service."""
 
     _svc_name_ = 'Python Web Service'
     _svc_display_name_ = 'Python Web Service'
-    _svc_deps_ = None  # sequence of service names on which this depends
+    _svc_deps_ = None        # sequence of service names on which this depends
     _exe_name_ = 'pywebsvc'
-    _exe_args_ = None  # Default to no arguments
+    _exe_args_ = None        # Default to no arguments
 
     # Only exists on Windows 2000 or later, ignored on windows NT
     _svc_description_ = 'Python Web Service'
