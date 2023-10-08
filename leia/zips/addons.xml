@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addons><addon id="plugin.audio.audiothekBrowser" name="Audiothek Browser" version="1.2.4" provider-name="CodingPF">
+<addons>
+<addon id="plugin.audio.audiothekBrowser" name="Audiothek Browser" version="1.2.4" provider-name="CodingPF">
     <requires>
-        <import addon="xbmc.python" version="2.25.0" />
+        <import addon="xbmc.python" version="2.25.0"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="addon.py">
         <provides>audio</provides>
@@ -34,19 +35,21 @@ fix playItem function
             <screenshot>resources/screenshot3.png</screenshot>
         </assets>
     </extension>
-</addon><addon id="plugin.video.newsApp" name="News App" version="1.1.1" provider-name="codingPF">
-    <requires>
-        <import addon="xbmc.python" version="2.25.0" />
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="addon.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <summary lang="de_DE">News App</summary>
-        <summary lang="en_GB">News App</summary>
-        <description lang="de_DE">News aus der Tagesschau App und ZDF Heute App</description>
-        <description lang="en_GB">News from Tagessschau App and ZDF Heute App</description>
-        <news>
+</addon><addon id="plugin.video.newsApp" name="News App" version="1.1.2" provider-name="codingPF">
+  <requires>
+    <import addon="xbmc.python" version="2.25.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="de_DE">News App</summary>
+    <summary lang="en_GB">News App</summary>
+    <description lang="de_DE">News aus der Tagesschau App und ZDF Heute App</description>
+    <description lang="en_GB">News from Tagessschau App and ZDF Heute App</description>
+    <news>
+v1.1.2
+- fix for Zdf Images
 v1.1.1
 - Source code cleanup
 v1.1.0
@@ -67,15 +70,15 @@ v1.0.2
 v1.0.1 
 - fix for Kodi19 binary download issue
 		</news>
-        <platform>all</platform>
-        <language>de en</language>
-        <license>MIT</license>
-        <source>https://github.com/codingPF/plugin.video.newsApp</source>
-        <email>j-doo@gmx.d</email>
-        <assets>
-            <icon>resources/icon.png</icon>
-            <fanart>resources/fanart.jpg</fanart>
-            <screenshot>resources/screenshot1.png</screenshot>
-        </assets>
-    </extension>
+    <platform>all</platform>
+    <language>de en</language>
+    <license>MIT</license>
+    <source>https://github.com/codingPF/plugin.video.newsApp</source>
+    <email>j-doo@gmx.d</email>
+    <assets>
+      <icon>resources/icon.png</icon>
+      <fanart>resources/fanart.jpg</fanart>
+      <screenshot>resources/screenshot1.png</screenshot>
+    </assets>
+  </extension>
 </addon></addons>
