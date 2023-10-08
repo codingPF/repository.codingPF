@@ -1,0 +1,99 @@
+name: Refresh Repository
+on:
+  workflow_dispatch:
+
+jobs:
+  RefreshAddon_leia_1:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.video.newsApp"
+      target_app_branch: "master"
+      target_kodi_version_name: "leia"
+      target_kodi_python_version: "2.25.0"
+      
+  RefreshAddon_leia_2:
+    needs: RefreshAddon_leia_1
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.audio.audiothekBrowser"
+      target_app_branch: "main"
+      target_kodi_version_name: "leia"
+      target_kodi_python_version: "2.25.0"
+
+  RefreshAddon_matrix_1:
+    needs: RefreshAddon_leia_2
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.video.newsApp"
+      target_app_branch: "master"
+      target_kodi_version_name: "matrix"
+      target_kodi_python_version: "3.0.0"
+      
+  RefreshAddon_matrix_2:
+    needs: RefreshAddon_matrix_1
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.audio.audiothekBrowser"
+      target_app_branch: "main"
+      target_kodi_version_name: "matrix"
+      target_kodi_python_version: "3.0.0"
+
+  RefreshAddon_matrix_3:
+    needs: RefreshAddon_matrix_2
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.audio.spotify"
+      target_app_branch: "master"
+      target_kodi_version_name: "matrix"
+      target_kodi_python_version: "3.0.0"
+
+  RefreshAddon_nexus_1:
+    needs: RefreshAddon_matrix_3
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.video.newsApp"
+      target_app_branch: "master"
+      target_kodi_version_name: "nexus"
+      target_kodi_python_version: "3.0.0"
+      
+  RefreshAddon_nexus_2:
+    needs: RefreshAddon_nexus_1
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.audio.audiothekBrowser"
+      target_app_branch: "nexus"
+      target_kodi_version_name: "nexus"
+      target_kodi_python_version: "3.0.0"
+      
+  RefreshAddon_nexus_3:
+    needs: RefreshAddon_nexus_2
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.audio.spotify"
+      target_app_branch: "master"
+      target_kodi_version_name: "nexus"
+      target_kodi_python_version: "3.0.0"
