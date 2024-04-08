@@ -40,7 +40,7 @@ jobs:
     steps:
       # checkout the repository
       - name: Checkout Add-on
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
         with:
           path: ${{ github.event.repository.name }}
           ref: main
@@ -107,12 +107,19 @@ jobs:
           # copy to target release repo
           cp $filename "${{ github.event.repository.name }}/${{ inputs.target_kodi_version_name }}/zips/${{ inputs.target_app }}"
         working-directory: ${{ inputs.target_app }}
-     
       # commit into self (target kodi repository)
       - name: Commit & Push changes
-        uses: actions-js/push@master
+        uses: ad-m/github-push-action@master
         with:
-          branch: main
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
           directory: ${{ github.event.repository.name }}
-          message: "publish ${{ inputs.target_app }} ${{ inputs.target_app_branch }} for ${{ inputs.target_kodi_version_name }}"
+     
+      # commit into self (target kodi repository)
+      #- name: Commit & Push changes
+      #  uses: actions-js/push@master
+      #  with:
+      #    branch: main
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      #    directory: ${{ github.event.repository.name }}
+      #    message: "publish ${{ inputs.target_app }} ${{ inputs.target_app_branch }} for ${{ inputs.target_kodi_version_name }}"
