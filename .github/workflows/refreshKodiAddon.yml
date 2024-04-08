@@ -47,7 +47,7 @@ jobs:
 
       # checkout target kodi addon
       - name: Checkout Add-on
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
         with:
           path: ${{ inputs.target_app }}
           repository: ${{ inputs.target_app_owner }}/${{ inputs.target_app }}
