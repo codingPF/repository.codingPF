@@ -111,5 +111,6 @@ jobs:
       - name: Commit & Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          repository: ${{ github.event.repository.name }}
           branch: main
           commit_message: "publish ${{ inputs.target_app }} ${{ inputs.target_app_branch }} for ${{ inputs.target_kodi_version_name }}"
