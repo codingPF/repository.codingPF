@@ -88,7 +88,7 @@ v1.0.1
       <screenshot>resources/screenshot1.png</screenshot>
     </assets>
   </extension>
-</addon><addon id="plugin.video.sportschauApp" name="Sportschau App" version="1.0.0" provider-name="codingPF">
+</addon><addon id="plugin.video.sportschauApp" name="Sportschau App" version="1.0.1" provider-name="codingPF">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
   </requires>
