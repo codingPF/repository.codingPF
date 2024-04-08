@@ -129,7 +129,7 @@ jobs:
     uses: ./.github/workflows/refreshKodiAddon.yml
     with:
       target_app_owner: "codingPF"
-      target_app: "plugin.video.sportschau"
+      target_app: "plugin.video.sportschauApp"
       target_app_branch: "main"
       target_kodi_version_name: "nexus"
       target_kodi_python_version: "3.0.0"
