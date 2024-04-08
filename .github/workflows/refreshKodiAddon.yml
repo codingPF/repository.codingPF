@@ -67,6 +67,7 @@ jobs:
           # first time for a new version or plugin
           if [ -d "${TGT_PATH}/resources" ]; then
             mkdir -p "${TGT_PATH}/resources"
+            touch ${TGT_PATH}/resources/dummy.xml
             touch ${TGT_PATH}/addon.xml
           fi
           # remove resource folder and add new          
