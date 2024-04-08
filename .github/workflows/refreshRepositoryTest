@@ -1,0 +1,15 @@
+name: Refresh Repository
+on:
+  workflow_dispatch:
+
+jobs:
+  RefreshAddon_leia_1:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "plugin.video.newsApp"
+      target_app_branch: "master"
+      target_kodi_version_name: "leia"
+      target_kodi_python_version: "2.25.0"
