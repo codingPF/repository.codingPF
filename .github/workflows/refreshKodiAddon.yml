@@ -109,8 +109,7 @@ jobs:
         working-directory: ${{ inputs.target_app }}
       # commit into self (target kodi repository)
       - name: Commit & Push changes
-        uses: ad-m/github-push-action@master
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
-          directory: ${{ github.event.repository.name }}
+          commit_message: "publish ${{ inputs.target_app }} ${{ inputs.target_app_branch }} for ${{ inputs.target_kodi_version_name }}"
