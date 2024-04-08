@@ -1,4 +1,4 @@
-name: Refresh Repository
+name: Refresh Repository Test
 on:
   workflow_dispatch:
 
