@@ -114,12 +114,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           directory: ${{ github.event.repository.name }}
-     
-      # commit into self (target kodi repository)
-      #- name: Commit & Push changes
-      #  uses: actions-js/push@master
-      #  with:
-      #    branch: main
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    directory: ${{ github.event.repository.name }}
-      #    message: "publish ${{ inputs.target_app }} ${{ inputs.target_app_branch }} for ${{ inputs.target_kodi_version_name }}"
