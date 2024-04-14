@@ -72,7 +72,7 @@ jobs:
           fi
           # remove resource folder and add new          
           rm -r ${TGT_PATH}/resources/*
-          cp -r ${SRC_PATH}/resources/*.{jpg,png} ${TGT_PATH}/resources
+          cp -f -r ${SRC_PATH}/resources/*.{jpg,png} ${TGT_PATH}/resources
           # fix kodi python version
           xmlstarlet ed -L -u '/addon/requires/import[@addon="xbmc.python"]/@version' -v '${{ inputs.target_kodi_python_version }}' ${SRC_PATH}/addon.xml
           # add addon.xml
