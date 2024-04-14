@@ -9,7 +9,7 @@ jobs:
     uses: ./.github/workflows/refreshKodiAddon.yml
     with:
       target_app_owner: "codingPF"
-      target_app: "plugin.video.newsApp"
-      target_app_branch: "master"
+      target_app: "script.module.ckfw"
+      target_app_branch: "main"
       target_kodi_version_name: "leia"
       target_kodi_python_version: "2.25.0"
