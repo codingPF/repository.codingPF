@@ -4,7 +4,6 @@ on:
 
 jobs:
   RefreshAddon_nexus_4:
-    needs: RefreshAddon_nexus_3
     permissions:
       contents: write
     uses: ./.github/workflows/refreshKodiAddon.yml
