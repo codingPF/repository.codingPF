@@ -143,7 +143,7 @@ v1.0.0 , v1.0.1, v1.0.2, v1.0.3
       <screenshot>resources/screenshot2.jpg</screenshot>
     </assets>
   </extension>
-</addon><addon id="script.module.ckfw" name="CodingPF Kodi Framework" version="1.0.0" provider-name="codingPF">
+</addon><addon id="script.module.ckfw" name="CodingPF Kodi Framework" version="1.0.1" provider-name="codingPF">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
   </requires>
