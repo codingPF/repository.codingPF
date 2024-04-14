@@ -140,4 +140,27 @@ v1.0.0
       <screenshot>resources/screenshot2.jpg</screenshot>
     </assets>
   </extension>
+</addon><addon id="script.module.ckfw" name="CodingPF Kodi Framework" version="1.0.0" provider-name="codingPF">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+  </requires>
+  <extension point="xbmc.python.module" library="lib"/>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="de_DE">CodingPF Kodi Framework</summary>
+    <summary lang="en_GB">CodingPF Kodi Framework</summary>
+    <description lang="de_DE">CodingPF Kodi Framework</description>
+    <description lang="en_GB">CodingPF Kodi Framework</description>
+    <news>
+v1.0.0
+- init
+		</news>
+    <platform>all</platform>
+    <language>de en</language>
+    <license>MIT</license>
+    <source>https://github.com/codingPF/plugin.video.newsApp</source>
+    <email>j-doo@gmx.d</email>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+  </extension>
 </addon></addons>
