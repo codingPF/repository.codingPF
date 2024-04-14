@@ -38,8 +38,20 @@ jobs:
       target_kodi_version_name: "leia"
       target_kodi_python_version: "2.25.0"
 
-  RefreshAddon_matrix_1:
+  RefreshAddon_leia_4:
     needs: RefreshAddon_leia_3
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "script.module.ckfw"
+      target_app_branch: "main"
+      target_kodi_version_name: "leia"
+      target_kodi_python_version: "2.25.0"
+      
+  RefreshAddon_matrix_1:
+    needs: RefreshAddon_leia_4
     permissions:
       contents: write
     uses: ./.github/workflows/refreshKodiAddon.yml
@@ -86,8 +98,20 @@ jobs:
       target_kodi_version_name: "matrix"
       target_kodi_python_version: "3.0.0"
 
-  RefreshAddon_nexus_1:
+  RefreshAddon_matrix_5:
     needs: RefreshAddon_matrix_4
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "script.module.ckfw"
+      target_app_branch: "main"
+      target_kodi_version_name: "matrix"
+      target_kodi_python_version: "3.0.0"
+
+  RefreshAddon_nexus_1:
+    needs: RefreshAddon_matrix_5
     permissions:
       contents: write
     uses: ./.github/workflows/refreshKodiAddon.yml
@@ -132,4 +156,16 @@ jobs:
       target_app: "plugin.video.sportschauApp"
       target_app_branch: "main"
       target_kodi_version_name: "nexus"
+      target_kodi_python_version: "3.0.0"
+  
+  RefreshAddon_nexus_5:
+    needs: RefreshAddon_nexus_4
+    permissions:
+      contents: write
+    uses: ./.github/workflows/refreshKodiAddon.yml
+    with:
+      target_app_owner: "codingPF"
+      target_app: "script.module.ckfw"
+      target_app_branch: "main"
+      target_kodi_version_name: "matrix"
       target_kodi_python_version: "3.0.0"
