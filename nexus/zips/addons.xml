@@ -114,10 +114,10 @@ v1.0.1
       <screenshot>resources/screenshot1.png</screenshot>
     </assets>
   </extension>
-</addon><addon id="plugin.video.sportschauApp" name="Sportschau App" version="1.0.1" provider-name="codingPF">
+</addon><addon id="plugin.video.sportschauApp" name="Sportschau App" version="1.0.2" provider-name="codingPF">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
-    <import addon="script.module.ckfw" version="1.0.0"/>
+    <import addon="script.module.ckfw" version="1.1.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -128,9 +128,7 @@ v1.0.1
     <description lang="de_DE">Inhalte aus der Sportschau</description>
     <description lang="en_GB">News from Sportschau</description>
     <news>
-v1.0.0 
-- fix imports
-v1.0.0 
+v1.0.0 , v1.0.1, v1.0.2
 - build
 		</news>
     <platform>all</platform>
