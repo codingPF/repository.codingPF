@@ -40,7 +40,7 @@ fix playItem function
       <screenshot>resources/screenshot3.png</screenshot>
     </assets>
   </extension>
-</addon><addon id="plugin.video.newsApp" name="News App" version="1.2.1" provider-name="codingPF">
+</addon><addon id="plugin.video.newsApp" name="News App" version="1.2.2" provider-name="codingPF">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
     <import addon="script.module.ckfw" version="1.0.1"/>
@@ -54,6 +54,8 @@ fix playItem function
     <description lang="de_DE">News aus der Tagesschau App und ZDF Heute App</description>
     <description lang="en_GB">News from Tagessschau App and ZDF Heute App</description>
     <news>
+v1.2.1 / 1.2.2
+- Minor fixes and host update
 v1.2.0
 - Kodi21 and move to framework
 v1.1.4
