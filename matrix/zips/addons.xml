@@ -70,7 +70,7 @@ Fixed 'all albums' for artist menu. Added extra artist track options. Cleaned me
       <fanart>resources/fanart.jpg</fanart>
     </assets>
   </extension>
-</addon><addon id="plugin.video.newsApp" name="News App" version="1.2.4" provider-name="codingPF">
+</addon><addon id="plugin.video.newsApp" name="News App" version="1.2.5" provider-name="codingPF">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="script.module.ckfw" version="1.0.1"/>
@@ -84,6 +84,9 @@ Fixed 'all albums' for artist menu. Added extra artist track options. Cleaned me
     <description lang="de_DE">News aus der Tagesschau App und ZDF Heute App</description>
     <description lang="en_GB">News from Tagessschau App and ZDF Heute App</description>
     <news>
+v1.2.5
+- fix missing duration ARD
+- fix typo ZDF
 v1.2.1 / 1.2.2 / 1.2.3 / 1.2.4
 - Minor fixes and host update
 v1.2.0
